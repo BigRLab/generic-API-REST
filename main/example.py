@@ -30,12 +30,14 @@ def site_map():
     return jsonify(get_site_map())
 
 
+# Custom configuration values (anything). They are accessible from the controller side.
 config = {}
-services = {}
-
 
 controller_factory = ControllerFactory(app, config)
-controller_factory.create_controller(CustomController)
+
+# Services to inject to the controller. They are accessible from the controller side.
+services = {}
+controller_factory.create_controller(CustomController, services)
 
 print("Visit http://localhost:1050/site-map for a list of endpoints.")
 

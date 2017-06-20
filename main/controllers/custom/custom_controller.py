@@ -10,7 +10,8 @@ __author__ = "Ivan de Paz Centeno"
 
 class CustomController(Controller):
     """
-    Controller for /detection-requests/faces/ URL
+    Controller for /custom-route/ URL.
+    This is a proof-of-concept controller. Modify it accordingly.
     """
 
     def __init__(self, flask_web_app, available_services, config):

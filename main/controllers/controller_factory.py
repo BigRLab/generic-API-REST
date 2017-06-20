@@ -23,22 +23,23 @@ class ControllerFactory(object):
         self.controllers = {}
         self.available_services = {}
 
-    def _create_atomic_controller(self, controller_proto):
+    def _create_atomic_controller(self, controller_proto, controller_services):
         """
         Generates a controller for the given name.
 
         :param controller_name: The name of the controller to create
         :param controller_proto: proto of the controller.
+        :param controller_services: services to inject to the controller.
         :return: The created controller instance. If the name of the controller does not exist, it will raise an
         exception.
         """
 
         return controller_proto(flask_web_app=self.flask_app,
-                                available_services=self.available_services,
+                                available_services=controller_services,
                                 config=self.config)
 
 
-    def create_controller(self, controller_proto):
+    def create_controller(self, controller_proto, controller_services):
         """
         Singleton-creation of the specified controller.
         When this method is invoked, it will add the controller to the flask app.
@@ -48,7 +49,9 @@ class ControllerFactory(object):
         controller_name = controller_proto.__name__
 
         if controller_name not in self.controllers:
-            self.controllers[controller_name] = self._create_atomic_controller(controller_proto)
+            self.available_services[controller_name] = controller_services
+            self.controllers[controller_name] = self._create_atomic_controller(controller_proto,
+                                                                               controller_services=controller_services)
 
         return self.controllers[controller_name]
 
