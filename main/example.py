@@ -10,9 +10,7 @@ __author__ = 'Iván de Paz Centeno'
 
 app = Flask(__name__)
 
-
-@app.route("/site-map")
-def site_map():
+def get_site_map():
     links = []
     for rule in app.url_map.iter_rules():
         # Filter out rules we can't navigate to in a browser
@@ -23,9 +21,13 @@ def site_map():
                 links.append((url, [m for m in rule.methods]))
         except:
             pass
-    # links is now a list of url, endpoint tuples
+            # links is now a list of url, endpoint tuples
 
-    return jsonify(links)
+    return links
+
+@app.route("/site-map")
+def site_map():
+    return jsonify(get_site_map())
 
 
 config = {}
@@ -35,6 +37,7 @@ services = {}
 controller_factory = ControllerFactory(app, config)
 controller_factory.create_controller(CustomController)
 
+print("Visit http://localhost:1050/site-map for a list of endpoints.")
 
 app.run("0.0.0.0", "1050", threaded=True)
 
